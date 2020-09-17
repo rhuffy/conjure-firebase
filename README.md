@@ -1,6 +1,6 @@
-# conjure-firebase
-Strongly type your Firebase Cloud Function API
+#  🔥 🔥 🔥 Conjure Firebase  🔥 🔥 🔥
+Strongly type your Firebase Cloud Function API using [Conjure](https://github.com/palantir/conjure)
 
-`npm install` to install dependencies, including conjure
+`npm install` to install dependencies, including Conjure
 
 `npm run conjure` to compile your API

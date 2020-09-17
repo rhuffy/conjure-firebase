@@ -3,7 +3,7 @@ types:
     default-package: com.conjurefirebase.firebase.api
     objects:
       Greeting:
-        fields: 
+        fields:
           to: string
           from: string
           text: string

@@ -15,5 +15,8 @@
     "conjure-typescript": "^4.2.1",
     "firebase": "^7.20.0"
   },
-  "conjure_version": "4.11.2"
+  "conjure_version": "4.11.2",
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  }
 }

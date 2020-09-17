@@ -10,6 +10,10 @@
   },
   "author": "Raymond Huffman",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rhuffy/conjure-firebase.git"
+  },
   "dependencies": {
     "conjure-client": "^2.4.1",
     "conjure-typescript": "^4.2.1",

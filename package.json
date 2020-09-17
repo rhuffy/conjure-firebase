@@ -9,7 +9,7 @@
     "conjure": "./scripts/run-conjure.sh $npm_package_conjure_version"
   },
   "author": "Raymond Huffman",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/rhuffy/conjure-firebase.git"

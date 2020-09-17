@@ -1,0 +1,19 @@
+{
+  "name": "conjure-firebase",
+  "version": "0.0.1",
+  "description": "Strongly type your Firebase Cloud Function API",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "./scripts/install-conjure.sh $npm_package_conjure_version",
+    "conjure": "./scripts/run-conjure.sh $npm_package_conjure_version"
+  },
+  "author": "Raymond Huffman",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "conjure-client": "^2.4.1",
+    "conjure-typescript": "^4.2.1",
+    "firebase": "^7.20.0"
+  },
+  "conjure_version": "4.11.2"
+}

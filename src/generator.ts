@@ -1,13 +1,35 @@
 import * as fs from "fs";
 import * as yaml from "js-yaml";
+import { exec } from "child_process";
 import { IConjureSourceFile } from "./conjure";
-
-const CONJURE_INPUT_FILE_PATH = process.argv[2];
-const CLIENT_OUTPUT_FILE_PATH = process.argv[3];
+import { conjure_version } from "../package.json";
 
 interface ServiceDefinition {
   name: string;
   type: "http" | "firebase";
+}
+
+export function run(
+  conjureInputFilePath: string,
+  clientOutputFilePath: string
+) {
+  const [services, conjureYml] = parseConjure(conjureInputFilePath);
+  const clientCode = generateClient(services);
+  fs.writeFileSync(clientOutputFilePath, clientCode);
+  fs.writeFileSync("generated-conjure.yml", conjureYml);
+  exec(
+    `rm -rf conjure-api && mkdir conjure-api &&
+  ./node_modules/conjure-firebase/conjure-${conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
+  ./node_modules/conjure-firebase/node_modules/conjure-typescript/bin/conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
+  rm generated-conjure.yml generated.conjure.json`,
+    (e, stdout, stderr) => {
+      if (e) {
+        console.error(e);
+      }
+      process.stdout.write(stdout);
+      process.stderr.write(stderr);
+    }
+  );
 }
 
 function parseConjure(path: string): [ServiceDefinition[], string] {
@@ -46,8 +68,6 @@ function generateClient(services: ServiceDefinition[]): string {
   }
 
   const clientCode = `
-import { DefaultHttpApiBridge } from "conjure-client";
-import FirebaseApiBridge from "./FirebaseApiBridge";
 ${servicesToImport(services)}
 
 const fab = new FirebaseApiBridge();
@@ -65,16 +85,11 @@ ${serviceExports}
 }
 
 const servicesToImport = (services: ServiceDefinition[]) =>
-  `import { ${services.map((s) => s.name).join(", ")} } from "../conjure-api"`;
+  `import { DefaultHttpApiBridge, FirebaseApiBridge, ${services
+    .map((s) => s.name)
+    .join(", ")} } from "conjure-firebase"`;
 const firebaseServiceToExport = (name: string) =>
   `const ${name}_instance = new ${name}(fab);\nexport { ${name}_instance as ${name} };\n`;
 
 const httpServiceToExport = (name: string) =>
   `const ${name}_instance = new ${name}(hab);\nexport { ${name}_instance as ${name} };\n`;
-
-if (require.main === module) {
-  const [services, conjureYml] = parseConjure(CONJURE_INPUT_FILE_PATH);
-  const clientCode = generateClient(services);
-  fs.writeFileSync(CLIENT_OUTPUT_FILE_PATH, clientCode);
-  process.stdout.write(conjureYml);
-}

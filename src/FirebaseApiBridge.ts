@@ -4,9 +4,9 @@ import "firebase/functions";
 
 const functions = firebase.functions();
 
-class FirebaseApiBridge implements IHttpApiBridge {
+export class FirebaseApiBridge implements IHttpApiBridge {
   async callEndpoint<T>(parameters: IHttpEndpointOptions): Promise<T> {
-    const result = await functions.httpsCallable(parameters.endpointName)(
+    const result = await functions.httpsCallable(parameters.endpointName!)(
       parameters.data
     );
     return result.data;
@@ -27,5 +27,3 @@ class FirebaseApiBridge implements IHttpApiBridge {
     return result.data;
   }
 }
-
-export default FirebaseApiBridge;

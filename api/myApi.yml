@@ -7,12 +7,20 @@ types:
           to: string
           from: string
           text: string
-
 services:
   FirebaseFunctionsService:
     name: Firebase Functions
     package: com.conjurefirebase.firebase.api
-    base-path: /firebase
+    firebase-callable: true
+    endpoints:
+      sayHello:
+        args:
+          name: string
+        returns: Greeting
+  NormalService:
+    name: Firebase Functions
+    package: com.conjurefirebase.firebase.api
+    base-path: /normal-service
     default-auth: none
     endpoints:
       sayHello:

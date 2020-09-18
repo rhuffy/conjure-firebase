@@ -85,9 +85,9 @@ ${serviceExports}
 }
 
 const servicesToImport = (services: ServiceDefinition[]) =>
-  `import { DefaultHttpApiBridge, FirebaseApiBridge, ${services
-    .map((s) => s.name)
-    .join(", ")} } from "conjure-firebase"`;
+  `import { DefaultHttpApiBridge, FirebaseApiBridge } from "conjure-firebase";
+import { ${services.map((s) => s.name).join(", ")} } from "./conjure-api";`;
+
 const firebaseServiceToExport = (name: string) =>
   `const ${name}_instance = new ${name}(fab);\nexport { ${name}_instance as ${name} };\n`;
 

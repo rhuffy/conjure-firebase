@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as yaml from "js-yaml";
 import { exec } from "child_process";
 import { IConjureSourceFile } from "./conjure";
-import { conjure_version } from "../package.json";
+const package_json = require("../package.json");
 
 interface ServiceDefinition {
   name: string;
@@ -19,7 +19,7 @@ export function run(
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
-  ./node_modules/conjure-firebase/conjure-${conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
+  ./node_modules/conjure-firebase/conjure-${package_json.conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
   conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
   rm generated-conjure.yml generated.conjure.json`,
     (e, stdout, stderr) => {

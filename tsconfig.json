@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "target": "es6",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "strict": true,
     "resolveJsonModule": true
   }

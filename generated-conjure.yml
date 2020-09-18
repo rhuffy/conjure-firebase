@@ -1,0 +1,30 @@
+types:
+  definitions:
+    default-package: com.conjurefirebase.firebase.api
+    objects:
+      Greeting:
+        fields:
+          to: string
+          from: string
+          text: string
+services:
+  FirebaseFunctionsService:
+    name: Firebase Functions
+    package: com.conjurefirebase.firebase.api
+    endpoints:
+      sayHello:
+        args:
+          name: string
+        returns: Greeting
+        http: POST /sayHello
+  NormalService:
+    name: Firebase Functions
+    package: com.conjurefirebase.firebase.api
+    base-path: /normal-service
+    default-auth: none
+    endpoints:
+      sayHello:
+        http: POST /
+        args:
+          name: string
+        returns: Greeting

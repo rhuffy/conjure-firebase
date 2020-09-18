@@ -20,7 +20,7 @@ export function run(
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
   ./node_modules/conjure-firebase/conjure-${conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
-  ./node_modules/conjure-firebase/node_modules/conjure-typescript/bin/conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
+  conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
   rm generated-conjure.yml generated.conjure.json`,
     (e, stdout, stderr) => {
       if (e) {

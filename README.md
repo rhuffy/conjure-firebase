@@ -1,5 +1,7 @@
 # 🔥 🔥 🔥 Conjure Firebase 🔥 🔥 🔥
 
+NOTE: This package is currently in active development and not ready for production use.
+
 Strongly type your Firebase Cloud Function API using [Conjure](https://github.com/palantir/conjure)
 
 ## Installation

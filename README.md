@@ -91,3 +91,56 @@ async function myFunction() {
   console.log(response.text);
 }
 ```
+
+
+##How Does It Work?
+
+Conjure Typescript generates a folder containing the definitions for the API objects and services. The objects are just TypeScript interfaces that can be imported as normal. Services are classes, and require an ApiBridge to work. The ApiBridge actually calls the endpoint that the conjure API is describing. Conjure Typescript provides the interface IHttpApiBridge which we implement.
+
+```typescript
+// conjure-client
+
+export interface IHttpEndpointOptions {
+    /** Conjure service name. Doesn't affect the network request. */
+    serviceName?: string;
+    /** Path to make a request to, e.g. "/foo/{param1}/bar". */
+    endpointPath: string;
+    /** Conjure endpoint name. Doesn't affect the network request. */
+    endpointName?: string;
+    /** HTTP headers. */
+    headers?: {
+        [header: string]: string | number | boolean | undefined | null;
+    };
+    /** HTTP method. */
+    method: string;
+    /** MIME type of the outgoing request, usually "application/json" */
+    requestMediaType?: MediaType;
+    /** MIME type of the expected server response, often "application/json" or "application/octet-stream" */
+    responseMediaType?: MediaType;
+    /** Values to be interpolated into the endpointPath. */
+    pathArguments: any[];
+    /** Key-value mappings to be appended to the request query string. */
+    queryArguments: any;
+    /** Data to send in the body. */
+    data?: any;
+    /** return binary response as web stream */
+    binaryAsStream?: boolean;
+}
+
+export interface IHttpApiBridge {
+    callEndpoint<T>(parameters: IHttpEndpointOptions): Promise<T>;
+}```
+
+
+```typescript
+// conjure-firebase (our code)
+export class FirebaseApiBridge implements IHttpApiBridge {
+    async callEndpoint<T>(parameters: IHttpEndpointOptions): Promise<T> {
+        // we use the firebase sdk to directly call the function, but
+        // we return the response as a typed object
+        const result = await functions.httpsCallable(parameters.endpointName!)(
+            parameters.data
+        );
+        return result.data;
+    }
+}```

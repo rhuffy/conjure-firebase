@@ -1,5 +1,6 @@
 {
   "name": "conjure-firebase-example",
+  "repository": "https://github.com/rhuffy/conjure-firebase",
   "version": "1.0.0",
   "description": "Demo for using conjure-firebase",
   "main": "index.js",

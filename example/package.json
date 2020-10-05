@@ -1,0 +1,14 @@
+{
+  "name": "conjure-firebase-example",
+  "version": "1.0.0",
+  "description": "Demo for using conjure-firebase",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "conjure-firebase": "^0.1.3"
+  }
+}

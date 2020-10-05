@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "rootDirs": ["src", "conjure-api"],
+      "target": "es6",
+      "module": "commonjs",
+      "declaration": true,
+      "outDir": "dist",
+      "strict": true,
+      "resolveJsonModule": true
+    }
+  }
+  

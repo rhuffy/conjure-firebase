@@ -19,7 +19,8 @@
     "conjure-client": "^2.4.1",
     "conjure-typescript": "^4.2.1",
     "firebase": "^7.20.0",
-    "js-yaml": "^3.14.0"
+    "js-yaml": "^3.14.0",
+    "ts-morph": "^8.1.1"
   },
   "conjure_version": "4.11.2",
   "devDependencies": {

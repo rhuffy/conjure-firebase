@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "./scripts/install-conjure.sh $npm_package_conjure_version",
+    "generate": "ts-node src/cli.ts",
     "build": "tsc"
   },
   "author": "Raymond Huffman",

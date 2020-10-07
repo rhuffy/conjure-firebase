@@ -1,8 +1,9 @@
 {
   "name": "conjure-firebase",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Strongly type your Firebase Cloud Function API",
-  "main": "dist/index.js",
+  "main": "dist/index",
+  "types": "dist/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "./scripts/install-conjure.sh $npm_package_conjure_version",

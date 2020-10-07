@@ -16,7 +16,7 @@ export function run(
   const [services, conjureYml] = parseConjure(conjureInputFilePath);
 
   const project = new Project();
-  generateServer(services, projecst);
+  generateServer(services, project);
   generateClient(services, project, clientOutputFilePath);
   project.save();
 

@@ -49,7 +49,7 @@ if (command.config) {
     });
 
     /** check if output path is valid */
-    if (isInvalid(output_path, { file: true })) {
+    if (isInvalid(output_path)) {
       console.log("Error: output path is an invalid file path");
       process.exit();
     }

@@ -1,12 +1,23 @@
+
 types:
+  # conjure-imports:
+  #   importedTypes: ./other-example-api.yml
   definitions:
     default-package: com.conjurefirebase.firebase.api
     objects:
-      Greeting:
+      MyInput1:
         fields:
           to: string
           from: string
           text: string
+      MyInput2:
+        fields:
+          name: string
+      MyOutput:
+        fields:
+          response: string
+          color: string
+          number: integer
 services:
   FirebaseFunctionsService:
     name: Firebase Functions
@@ -14,6 +25,8 @@ services:
     firebase-callable: true
     endpoints:
       sayHello:
-        args:
-          name: string
-        returns: Greeting
+        data: MyInput1
+        returns: MyOutput
+      sayHello2:
+        data: MyInput2
+        returns: MyOutput

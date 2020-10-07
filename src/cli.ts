@@ -54,7 +54,7 @@ if (command.config) {
       process.exit();
     }
 
-    run(input_path, output_path);
+    run(input_path, output_path, "functions/src");
   }
 }
 

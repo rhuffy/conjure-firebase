@@ -10,12 +10,13 @@ const package_json = require("../package.json");
 
 export function run(
   conjureInputFilePath: string,
-  clientOutputFilePath: string
+  clientOutputFilePath: string,
+  serverOutputDir: string
 ) {
   const [services, conjureYml] = parseConjure(conjureInputFilePath);
 
   const project = new Project();
-  generateServer(services, project);
+  generateServer(services, project, serverOutputDir);
   generateClient(services, project, clientOutputFilePath);
   project.save();
 

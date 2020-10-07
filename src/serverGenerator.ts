@@ -5,10 +5,11 @@ const FIREBASE_CALLABLE_CONTEXT = "functions.https.CallableContext";
 
 export default function generateServer(
   services: IServiceDefinition[],
-  project: Project
+  project: Project,
+  serverOutputDir: string
 ) {
   for (const service of services.filter((x) => x.type === "firebase")) {
-    const fileName = `${service.name}.ts`;
+    const fileName = `${serverOutputDir}/${service.name}.ts`;
     //TODO be smart about the file path
     let file = project.addSourceFileAtPathIfExists(fileName);
 

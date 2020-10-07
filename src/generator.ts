@@ -1,39 +1,25 @@
 import * as fs from "fs";
 import * as yaml from "js-yaml";
-import {
-  FunctionDeclaration,
-  InterfaceDeclaration,
-  Project,
-  SourceFile,
-} from "ts-morph";
 import { exec } from "child_process";
-import { IConjureSourceFile } from "./conjure";
+import { IConjureSourceFile, IServiceDefinition, IEndpoint } from "./conjure";
+
+import generateClient from "./clientGenerator";
+
+import generateServer from "./serverGenerator";
+import { Project } from "ts-morph";
 const package_json = require("../package.json");
-
-const FIREBASE_CALLABLE_CONTEXT = "functions.https.CallableContext";
-const CLOUD_FUNCTIONS_URL =
-  "https://us-central1-my-cool-project.cloudfunctions.net";
-
-interface IServiceDefinition {
-  name: string;
-  type: "http" | "firebase";
-  endpoints: IEndpoint[];
-}
-
-interface IEndpoint {
-  name: string;
-  inputType: string;
-  returns: string;
-}
 
 export function run(
   conjureInputFilePath: string,
   clientOutputFilePath: string
 ) {
   const [services, conjureYml] = parseConjure(conjureInputFilePath);
-  generateServer(services);
-  const clientCode = generateClient(services);
-  fs.writeFileSync(clientOutputFilePath, clientCode);
+
+  const project = new Project();
+  generateServer(services, projecst);
+  generateClient(services, project, clientOutputFilePath);
+  project.save();
+
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
@@ -86,118 +72,3 @@ function parseConjure(path: string): [IServiceDefinition[], string] {
   }
   return [declaredServices, yaml.safeDump(doc)];
 }
-
-function generateServer(services: IServiceDefinition[]) {
-  const project = new Project();
-
-  for (const service of services.filter((x) => x.type === "firebase")) {
-    const fileName = `${service.name}.ts`;
-    //TODO be smart about the file path
-    let file = project.addSourceFileAtPathIfExists(fileName);
-
-    if (file === undefined) {
-      file = project.createSourceFile(fileName);
-      file.addImportDeclaration({
-        namespaceImport: "functions",
-        moduleSpecifier: "firebase-functions",
-      });
-    }
-
-    const importDec = file.getImportDeclaration((i) => {
-      return i.getModuleSpecifierValue().split("/").pop() === "conjure-api";
-    });
-
-    if (importDec) {
-      importDec.removeNamedImports();
-      importDec.addNamedImports([
-        ...new Set(service.endpoints.map((e) => e.inputType)),
-      ]);
-    } else {
-      file.addImportDeclaration({
-        // TODO be smart about where this path is
-        moduleSpecifier: "./conjure-api",
-        namedImports: [...new Set(service.endpoints.map((e) => e.inputType))],
-      });
-    }
-
-    for (const endpoint of service.endpoints) {
-      const endpointFunction = file.getFunction(endpoint.name);
-      if (endpointFunction) {
-        modifyFunctionForEndpoint(endpoint, endpointFunction);
-      } else {
-        createFunctionForEndpointInFile(endpoint, file);
-      }
-    }
-  }
-
-  project.save();
-}
-
-function createFunctionForEndpointInFile(
-  endpoint: IEndpoint,
-  file: SourceFile
-) {
-  file.addFunction({
-    name: endpoint.name,
-    isExported: true,
-    parameters: [
-      { name: "data", type: endpoint.inputType },
-      { name: "context", type: FIREBASE_CALLABLE_CONTEXT },
-    ],
-    returnType: endpoint.returns,
-    statements: (writer) =>
-      writer.write("throw new Error(").quote("Not Implemented!").write(");"),
-  });
-}
-
-function modifyFunctionForEndpoint(
-  endpoint: IEndpoint,
-  functionDec: FunctionDeclaration
-) {
-  functionDec.getParameter("data")?.setType(endpoint.inputType);
-  if (functionDec.isAsync()) {
-    functionDec.setReturnType(`Promise<${endpoint.returns}>`);
-  } else {
-    functionDec.setReturnType(endpoint.returns);
-  }
-}
-
-function generateClient(services: IServiceDefinition[]): string {
-  const cloudFunctionsBaseUrl =
-    "https://us-central1-my-cool-project.cloudfunctions.net";
-
-  let serviceExports = "";
-  for (const definition of services) {
-    if (definition.type === "firebase") {
-      serviceExports += firebaseServiceToExport(definition.name);
-    }
-    if (definition.type === "http") {
-      serviceExports += httpServiceToExport(definition.name);
-    }
-  }
-  const clientCode = `
-${servicesToImport(services)}
-
-const fab = new FirebaseApiBridge();
-const hab = new DefaultHttpApiBridge({
-  baseUrl: "${cloudFunctionsBaseUrl}",
-  userAgent: {
-    productName: "conjure-firebase",
-    productVersion: "1.0.0",
-  },
-});
-
-${serviceExports}
-  `;
-  return clientCode;
-}
-
-const servicesToImport = (services: IServiceDefinition[]) =>
-  `import { DefaultHttpApiBridge, FirebaseApiBridge } from "conjure-firebase";
-import { ${services.map((s) => s.name).join(", ")} } from "./conjure-api";`;
-
-const firebaseServiceToExport = (name: string) =>
-  `const ${name}_instance = new ${name}(fab);\nexport { ${name}_instance as ${name} };\n`;
-
-const httpServiceToExport = (name: string) =>
-  `const ${name}_instance = new ${name}(hab);\nexport { ${name}_instance as ${name} };\n`;

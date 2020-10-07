@@ -26,14 +26,16 @@ export default function generateServer(
 
     if (importDec) {
       importDec.removeNamedImports();
-      importDec.addNamedImports([
-        ...new Set(service.endpoints.map((e) => e.inputType)),
-      ]);
+      importDec.addNamedImports(
+        Array.from(new Set(service.endpoints.map((e) => e.inputType)))
+      );
     } else {
       file.addImportDeclaration({
         // TODO be smart about where this path is
         moduleSpecifier: "./conjure-api",
-        namedImports: [...new Set(service.endpoints.map((e) => e.inputType))],
+        namedImports: Array.from(
+          new Set(service.endpoints.map((e) => e.inputType))
+        ),
       });
     }
 

@@ -2,11 +2,10 @@ import * as fs from "fs";
 import * as yaml from "js-yaml";
 import { exec } from "child_process";
 import { IConjureSourceFile, IServiceDefinition, IEndpoint } from "./conjure";
-
 import generateClient from "./clientGenerator";
-
 import generateServer from "./serverGenerator";
 import { Project } from "ts-morph";
+
 const package_json = require("../package.json");
 
 export function run(

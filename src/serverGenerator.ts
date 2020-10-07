@@ -1,4 +1,9 @@
-import { FunctionDeclaration, Project, SourceFile } from "ts-morph";
+import {
+  FunctionDeclaration,
+  Project,
+  SourceFile,
+  VariableDeclarationKind,
+} from "ts-morph";
 import { IServiceDefinition, IEndpoint } from "./conjure";
 
 const FIREBASE_CALLABLE_CONTEXT = "functions.https.CallableContext";
@@ -57,7 +62,6 @@ function createFunctionForEndpointInFile(
 ) {
   file.addFunction({
     name: endpoint.name,
-    isExported: true,
     parameters: [
       { name: "data", type: endpoint.inputType },
       { name: "context", type: FIREBASE_CALLABLE_CONTEXT },
@@ -65,6 +69,19 @@ function createFunctionForEndpointInFile(
     returnType: endpoint.returns,
     statements: (writer) =>
       writer.write("throw new Error(").quote("Not Implemented!").write(");"),
+  });
+  file.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    declarations: [
+      {
+        name: `__${endpoint.name}`,
+        initializer: `functions.https.onCall(${endpoint.name})`,
+      },
+    ],
+  });
+  file.addExportDeclaration({
+    namedExports: (writer) =>
+      writer.write(`__${endpoint.name} as ${endpoint.name}`),
   });
 }
 

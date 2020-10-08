@@ -20,6 +20,13 @@ export default function generateServer(
 
     if (file === undefined) {
       file = project.createSourceFile(fileName);
+    }
+
+    const firebaseImport = file.getImportDeclaration(
+      (dec) => dec.getModuleSpecifierValue() === "firebase-functions"
+    );
+
+    if (firebaseImport === undefined) {
       file.addImportDeclaration({
         namespaceImport: "functions",
         moduleSpecifier: "firebase-functions",
@@ -33,14 +40,24 @@ export default function generateServer(
     if (importDec) {
       importDec.removeNamedImports();
       importDec.addNamedImports(
-        Array.from(new Set(service.endpoints.map((e) => e.inputType)))
+        Array.from(
+          new Set(
+            service.endpoints
+              .map((e) => e.inputType)
+              .concat(service.endpoints.map((e) => e.returns))
+          )
+        )
       );
     } else {
       file.addImportDeclaration({
         // TODO be smart about where this path is
         moduleSpecifier: "./conjure-api",
         namedImports: Array.from(
-          new Set(service.endpoints.map((e) => e.inputType))
+          new Set(
+            service.endpoints
+              .map((e) => e.inputType)
+              .concat(service.endpoints.map((e) => e.returns))
+          )
         ),
       });
     }
@@ -53,6 +70,7 @@ export default function generateServer(
         createFunctionForEndpointInFile(endpoint, file);
       }
     }
+    handleExports(service.endpoints, file);
   }
 }
 
@@ -95,4 +113,33 @@ function modifyFunctionForEndpoint(
   } else {
     functionDec.setReturnType(endpoint.returns);
   }
+}
+
+function handleExports(endpoints: IEndpoint[], file: SourceFile) {
+  for (const endpoint of endpoints) {
+    const statement = file.getVariableStatement(`__${endpoint.name}`);
+    statement?.remove();
+    file.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [
+        {
+          name: `__${endpoint.name}`,
+          initializer: `functions.https.onCall(${endpoint.name})`,
+        },
+      ],
+    });
+  }
+  for (const endpoint of endpoints) {
+    const statement = file.getExportDeclaration((dec) =>
+      dec
+        .getNamedExports()
+        .some((named) => named.getName() === `__${endpoint.name}`)
+    );
+    statement?.remove();
+  }
+  file.addExportDeclaration({
+    namedExports: endpoints.map(
+      (endpoint) => `__${endpoint.name} as ${endpoint.name}`
+    ),
+  });
 }

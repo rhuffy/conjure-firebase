@@ -25,7 +25,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2973cb71-8297-4404-9006-c0c22811184d" name="Default Changelist" comment="" />
+    <list default="true" id="2973cb71-8297-4404-9006-c0c22811184d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cli.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/cli.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -80,6 +83,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="387" y="267" key="IDE.errors.dialog" timestamp="1602175997483">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="387" y="267" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1602175997483" />
     <state x="341" y="164" key="SettingsEditor" timestamp="1602008170745">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

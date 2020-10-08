@@ -10,14 +10,24 @@ const command = new Command();
 command
   .version(package_json.version)
   .description(
-    "To use Conjure with Firebase, specify the input and output paths and the project path to save service functions."
+    "To use Conjure with Firebase, specify the input and output paths and the project path to save server functions."
   )
   .option(
     "-c, --config",
-    'use a config file in json format with name ".conjure-firebase-config" for arguments given as "input", "output", and "functionsProject"'
+    'use a config file in json format with name ".conjure-firebase-config" for arguments given as "input", "output", and functionsProject"'
   )
   .parse(process.argv);
 
+/** Do we have two different run functions with diff inputs? or do we always accept same number of inputs
+  .option(
+    "-cl, --client",
+    'use config file in json format with name ".conjure-firebase-config" with argument "input" and "output" to generate only client '
+  )
+  .option(
+    "-s, --server",
+    'use config file in json format with name ".conjure-firebase-config" with arguments'
+  )
+*/
 var input_path = "";
 var output_path = "";
 var functions_source = "";

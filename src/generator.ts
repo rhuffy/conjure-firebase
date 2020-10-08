@@ -10,14 +10,18 @@ import package_json from "../package.json";
 
 export function run(
   conjureInputFilePath: string,
-  clientOutputFilePath: string,
-  serverOutputDir: string
+  clientOutputFilePath: string | null,
+  serverOutputDir: string | null
 ): void {
   const [services, conjureYml] = parseConjure(conjureInputFilePath);
 
   const project = new Project();
-  generateServer(services, project, serverOutputDir);
-  generateClient(services, project, clientOutputFilePath);
+  if (clientOutputFilePath !== null) {
+    generateClient(services, project, clientOutputFilePath);
+  }
+  if (serverOutputDir !== null) {
+    generateServer(services, project, serverOutputDir);
+  }
   project.save();
 
   fs.writeFileSync("generated-conjure.yml", conjureYml);

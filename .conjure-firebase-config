@@ -1,0 +1,5 @@
+{
+  "input": "example/example-api.yml",
+  "output": "example/example-client-using-config.ts",
+  "functionsProject": "functions/src"
+}

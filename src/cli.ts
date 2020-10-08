@@ -14,7 +14,7 @@ command
   )
   .option(
     "-c, --config",
-    'use a config file with name ".conjure-firebase-config.json" for arguments given as "input", "output", and "functionsProject"'
+    'use a config file in json format with name ".conjure-firebase-config" for arguments given as "input", "output", and "functionsProject"'
   )
   .parse(process.argv);
 
@@ -24,7 +24,7 @@ var functions_source = "";
 
 if (command.config) {
   console.log("using config file...");
-  const data = fs.readFileSync("conjure-firebase-config.json", {
+  const data = fs.readFileSync(".conjure-firebase-config", {
     encoding: "utf8",
     flag: "r",
   });

@@ -22,9 +22,11 @@
     "scripts"
   ],
   "dependencies": {
+    "@types/jquery": "^3.5.2",
     "conjure-client": "^2.4.1",
     "conjure-typescript": "^4.2.1",
     "firebase": "^7.20.0",
+    "is-invalid-path": "^1.0.2",
     "js-yaml": "^3.14.0",
     "ts-morph": "^8.1.1"
   },

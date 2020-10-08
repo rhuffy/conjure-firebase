@@ -1,0 +1,5 @@
+{
+  "conjureDefinitions": "example-api.yml",
+  "clientFile": "src/example-client.ts",
+  "functionsPath": "functions/src"
+}

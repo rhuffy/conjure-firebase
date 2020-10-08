@@ -5,11 +5,12 @@
   "description": "Demo for using conjure-firebase",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "conjure-firebase --config .conjure-firebase-config"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "conjure-firebase": "^0.3.0"
+    "conjure-firebase": "^0.3.1"
   }
 }

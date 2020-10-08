@@ -3,8 +3,7 @@ import { run } from "./generator";
 import * as fs from "fs";
 import { Command } from "commander";
 
-const isInvalid = require("is-invalid-path");
-const package_json = require("../package.json");
+import package_json = require("../package.json");
 
 const command = new Command();
 command
@@ -28,9 +27,9 @@ command
     'use config file in json format with name ".conjure-firebase-config" with arguments'
   )
 */
-var input_path = "";
-var output_path = "";
-var functions_source = "";
+let input_path = "";
+let output_path = "";
+let functions_source = "";
 
 if (command.config) {
   console.log("using config file...");
@@ -42,9 +41,9 @@ if (command.config) {
 
   /** check that all arguments are given in config file*/
   if (
-    !parsedData.hasOwnProperty("input") ||
-    !parsedData.hasOwnProperty("output") ||
-    !parsedData.hasOwnProperty("functionsProject")
+    !("input" in parsedData) ||
+    !("output" in parsedData) ||
+    !("functionsProject" in parsedData)
   ) {
     console.log(
       "Error: config file is missing field or not formatted properly. Specify input, output, and functionsProject properties"
@@ -80,25 +79,15 @@ if (command.config) {
   functions_source = process.argv[4];
 }
 
-/** check if input path is valid */
-fs.open(input_path, "r", (err, fd) => {
-  if (err) {
-    console.log(err);
-    console.log(command.helpInformation());
-    process.exit();
-  }
-});
-
-/** check if output path is valid */
-if (isInvalid(output_path)) {
-  console.log("Error: output path is an invalid file path");
+if (!fs.lstatSync(input_path).isFile()) {
+  console.log("Error: input file does not exist");
   console.log(command.helpInformation());
   process.exit();
 }
 
 /** check if function source folder is valid path */
-if (isInvalid(functions_source)) {
-  console.log("Error: functions source folder is not a valid path");
+if (!fs.lstatSync(functions_source).isDirectory()) {
+  console.log("Error: output functions directory does not exist");
   console.log(command.helpInformation());
   process.exit();
 }

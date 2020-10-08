@@ -6,13 +6,13 @@ import generateClient from "./clientGenerator";
 import generateServer from "./serverGenerator";
 import { Project } from "ts-morph";
 
-const package_json = require("../package.json");
+import package_json from "../package.json";
 
 export function run(
   conjureInputFilePath: string,
   clientOutputFilePath: string,
   serverOutputDir: string
-) {
+): void {
   const [services, conjureYml] = parseConjure(conjureInputFilePath);
 
   const project = new Project();

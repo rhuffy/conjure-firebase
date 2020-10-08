@@ -1,5 +1,5 @@
 {
-  "input": "example/example-api.yml",
-  "output": "example/example-client-using-config.ts",
-  "functionsProject": "functions/src"
+  "conjureDefinitions": "example/example-api.yml",
+  "clientFile": "example/example-client-using-config.ts",
+  "functionsPath": "functions/src"
 }

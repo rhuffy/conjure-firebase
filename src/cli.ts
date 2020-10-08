@@ -41,9 +41,9 @@ if (command.config) {
 
   /** check that all arguments are given in config file*/
   if (
-    !("input" in parsedData) ||
-    !("output" in parsedData) ||
-    !("functionsProject" in parsedData)
+    !("conjureDefinitions" in parsedData) ||
+    !("clientFile" in parsedData) ||
+    !("functionsPath" in parsedData)
   ) {
     console.log(
       "Error: config file is missing field or not formatted properly. Specify input, output, and functionsProject properties"
@@ -52,9 +52,9 @@ if (command.config) {
     process.exit();
   }
 
-  input_path = parsedData.input;
-  output_path = parsedData.output;
-  functions_source = parsedData.functionsProject;
+  input_path = parsedData.conjureDefinitions;
+  output_path = parsedData.clientFile;
+  functions_source = parsedData.functionsPath;
   console.log("config file was read successfully");
 } else {
   /** check that there are two inputs */

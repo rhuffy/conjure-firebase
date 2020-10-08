@@ -32,7 +32,7 @@ export function run(
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
-  ./conjure-${
+  ./node_modules/conjure-firebase/conjure-${
     package_json.conjure_version
   }/bin/conjure compile generated-conjure.yml generated.conjure.json &&
   conjure-typescript generate --rawSource generated.conjure.json conjure-api &&

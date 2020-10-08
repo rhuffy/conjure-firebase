@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "conjure-firebase": "^0.1.3"
+    "conjure-firebase": "^0.3.0"
   }
 }

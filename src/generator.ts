@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fs from "fs";
 import * as yaml from "js-yaml";
@@ -8,7 +9,7 @@ import generateClient from "./clientGenerator";
 import generateServer from "./serverGenerator";
 import { Project } from "ts-morph";
 
-import package_json from "../package.json";
+const package_json = require("../package.json");
 
 export function run(
   conjureInputFilePath: string,

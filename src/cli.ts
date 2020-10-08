@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { run } from "./generator";
 import * as fs from "fs";
 import { Command } from "commander";
 
-import package_json = require("../package.json");
+const package_json = require("../package.json");
 
 const command = new Command();
 command

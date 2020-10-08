@@ -17,9 +17,11 @@ export function run(
 
   const project = new Project();
   if (clientOutputFilePath !== null) {
+    console.log(`Generating Client ${clientOutputFilePath}`);
     generateClient(services, project, clientOutputFilePath);
   }
   if (serverOutputDir !== null) {
+    console.log(`Generating Cloud Functions ${serverOutputDir}`);
     generateServer(services, project, serverOutputDir);
   }
   project.save();
@@ -27,7 +29,7 @@ export function run(
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
-  ./node_modules/conjure-firebase/conjure-${package_json.conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
+  ./conjure-${package_json.conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
   conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
   rm generated-conjure.yml generated.conjure.json`,
     (e, stdout, stderr) => {

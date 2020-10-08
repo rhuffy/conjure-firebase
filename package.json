@@ -1,6 +1,6 @@
 {
   "name": "conjure-firebase",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Strongly type your Firebase Cloud Function API",
   "main": "dist/index",
   "types": "dist/index",

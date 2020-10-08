@@ -47,7 +47,7 @@ function parseConjure(path: string): [IServiceDefinition[], string] {
       const endpoints: IEndpoint[] = endpointNames.map((name) => {
         return {
           name,
-          inputType: "I" + doc.services[serviceName].endpoints[name].args.data,
+          inputType: "I" + doc.services[serviceName].endpoints[name].data,
           returns: "I" + doc.services[serviceName].endpoints[name].returns,
         };
       });
@@ -61,6 +61,10 @@ function parseConjure(path: string): [IServiceDefinition[], string] {
         doc.services[serviceName].endpoints[functionName][
           "http"
         ] = `POST /${functionName}`;
+        doc.services[serviceName].endpoints[functionName]["args"] = {
+          data: doc.services[serviceName].endpoints[functionName].data,
+        };
+        delete doc.services[serviceName].endpoints[functionName].data;
       }
     } else {
       declaredServices.push({

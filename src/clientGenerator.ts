@@ -5,7 +5,7 @@ export default function generateClient(
   services: IServiceDefinition[],
   project: Project,
   clientOutputFilePath: string
-) {
+): void {
   const sourceFile = project.createSourceFile(clientOutputFilePath, "", {
     overwrite: true,
   });

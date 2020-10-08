@@ -12,7 +12,7 @@ export default function generateServer(
   services: IServiceDefinition[],
   project: Project,
   serverOutputDir: string
-) {
+): void {
   for (const service of services.filter((x) => x.type === "firebase")) {
     const fileName = `${serverOutputDir}/${service.name}.ts`;
     //TODO be smart about the file path

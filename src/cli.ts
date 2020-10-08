@@ -4,91 +4,103 @@ import * as fs from "fs";
 import { Command } from "commander";
 
 const isInvalid = require("is-invalid-path");
-
 const package_json = require("../package.json");
 
 const command = new Command();
 command
   .version(package_json.version)
   .description(
-    "To use Conjure with Firebase, specify the input and output paths."
+    "To use Conjure with Firebase, specify the input and output paths and the project path to save server functions."
   )
   .option(
     "-c, --config",
-    'use a config file with name ".conjure-firebase-config.json" for arguments given as "input" and "output"'
+    'use a config file in json format with name ".conjure-firebase-config" for arguments given as "input", "output", and functionsProject"'
   )
   .parse(process.argv);
 
+/** Do we have two different run functions with diff inputs? or do we always accept same number of inputs
+  .option(
+    "-cl, --client",
+    'use config file in json format with name ".conjure-firebase-config" with argument "input" and "output" to generate only client '
+  )
+  .option(
+    "-s, --server",
+    'use config file in json format with name ".conjure-firebase-config" with arguments'
+  )
+*/
+var input_path = "";
+var output_path = "";
+var functions_source = "";
+
 if (command.config) {
-  console.log("using config file");
-  /**
-    const data = require(".conjure-firebase-config.json");
-    console.log(data);
-    */
-  process.exit();
+  console.log("using config file...");
+  const data = fs.readFileSync(".conjure-firebase-config", {
+    encoding: "utf8",
+    flag: "r",
+  });
+  const parsedData = JSON.parse(data);
+
+  /** check that all arguments are given in config file*/
+  if (
+    !parsedData.hasOwnProperty("input") ||
+    !parsedData.hasOwnProperty("output") ||
+    !parsedData.hasOwnProperty("functionsProject")
+  ) {
+    console.log(
+      "Error: config file is missing field or not formatted properly. Specify input, output, and functionsProject properties"
+    );
+    console.log(command.helpInformation());
+    process.exit();
+  }
+
+  input_path = parsedData.input;
+  output_path = parsedData.output;
+  functions_source = parsedData.functionsProject;
+  console.log("config file was read successfully");
 } else {
   /** check that there are two inputs */
   const num_args = process.argv.slice(2).length;
   if (num_args === 0) {
     console.log("Error: no config file or arguments were given");
+    console.log(command.helpInformation());
     process.exit();
   }
   if (process.argv.slice(2).length === 1) {
-    console.log("Error: expected two arguments but only one was given");
+    console.log("Error: expected three arguments but only one was given");
+    console.log(command.helpInformation());
     process.exit();
-  } else {
-    const input_path = process.argv[2];
-    const output_path = process.argv[3];
-
-    /** check if input path is valid */
-    fs.open(input_path, "r", (err, fd) => {
-      if (err) {
-        console.log(err);
-        process.exit();
-      }
-    });
-
-    /** check if output path is valid */
-    if (isInvalid(output_path)) {
-      console.log("Error: output path is an invalid file path");
-      process.exit();
-    }
-
-    run(input_path, output_path, "functions/src");
   }
+  if (process.argv.slice(2).length === 2) {
+    console.log("Error: expected three arguments but only two were given");
+    console.log(command.helpInformation());
+    process.exit();
+  }
+  input_path = process.argv[2];
+  output_path = process.argv[3];
+  functions_source = process.argv[4];
 }
 
-/**
-     fs.stat(input_path, (exists) => {
-        if (exists == null) {
-            return true;
-         } else if (exists.code === 'ENOENT') {
-             return false;
-         }
-     });
-*/
+/** check if input path is valid */
+fs.open(input_path, "r", (err, fd) => {
+  if (err) {
+    console.log(err);
+    console.log(command.helpInformation());
+    process.exit();
+  }
+});
 
-/** return error if null path and true if valid file
-function checkInputPath(input_path: any): boolean {
-    fs.open(input_path, 'r', (err, fd) => {
-      if (err) {
-        if (err.code === 'ENOENT') {
-          console.error('${input_path} does not exist');
-          return false;
-        }
-
-        throw err;
-      }
-    }
-     return true;
+/** check if output path is valid */
+if (isInvalid(output_path)) {
+  console.log("Error: output path is an invalid file path");
+  console.log(command.helpInformation());
+  process.exit();
 }
-*/
-/**
-function checkOutputPath(output_path: any): boolean {
-    return true;
-}
-*/
 
-/**
-run(input_path, output_path);
-*/
+/** check if function source folder is valid path */
+if (isInvalid(functions_source)) {
+  console.log("Error: functions source folder is not a valid path");
+  console.log(command.helpInformation());
+  process.exit();
+}
+
+run(input_path, output_path, functions_source);

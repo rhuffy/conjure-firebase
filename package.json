@@ -24,13 +24,15 @@
   "dependencies": {
     "commander": "^6.1.0",
     "conjure-client": "^2.4.1",
-    "firebase": "^7.22.1",
+    "conjure-typescript": "^4.2.1",
+    "firebase": "^7.20.0",
     "is-invalid-path": "^1.0.2",
     "js-yaml": "^3.14.0",
     "ts-morph": "^8.1.1"
   },
   "conjure_version": "4.11.2",
   "devDependencies": {
+    "@types/jquery": "^3.5.2",
     "@types/js-yaml": "^3.12.5",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",

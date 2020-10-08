@@ -28,6 +28,7 @@ export function run(
   }
   project.save();
 
+  console.log("Generating Conjure definitions");
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&

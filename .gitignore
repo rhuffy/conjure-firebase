@@ -4,3 +4,5 @@ dist
 
 conjure-*
 *conjure.json
+
+.DS_Store

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fs from "fs";
 import * as yaml from "js-yaml";
+import * as path from "path";
 import { exec } from "child_process";
 import { IConjureSourceFile, IServiceDefinition, IEndpoint } from "./conjure";
 import generateClient from "./clientGenerator";
@@ -29,9 +31,17 @@ export function run(
   fs.writeFileSync("generated-conjure.yml", conjureYml);
   exec(
     `rm -rf conjure-api && mkdir conjure-api &&
-  ./conjure-${package_json.conjure_version}/bin/conjure compile generated-conjure.yml generated.conjure.json &&
+  ./conjure-${
+    package_json.conjure_version
+  }/bin/conjure compile generated-conjure.yml generated.conjure.json &&
   conjure-typescript generate --rawSource generated.conjure.json conjure-api &&
-  rm generated-conjure.yml generated.conjure.json`,
+  rm generated-conjure.yml generated.conjure.json && ${
+    serverOutputDir === null ? "exit 0 &&" : ""
+  }
+  rm -rf ${path.join(
+    serverOutputDir!,
+    "conjure-api"
+  )} && cp -R conjure-api ${path.join(serverOutputDir!, "conjure-api")}`,
     (e, stdout, stderr) => {
       if (e) {
         console.error(e);

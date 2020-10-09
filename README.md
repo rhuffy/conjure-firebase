@@ -14,7 +14,12 @@ npm install conjure-firebase
 
 ## Usage
 
-Once installed, create a single YAML file to describe your API. Your Conjure definitions must follow [this format](https://palantir.github.io/conjure/#/docs/spec/conjure_definitions), with some small modifications. Any "service" may be treated as a "Firebase Callable" service by setting the field `firebase-callable: true`. For these services, do not define `base-path` or `default-auth` and for that service's endpoints, do not define `http`.
+Once installed, create a single YAML file to describe your API. Your Conjure definitions must follow [this format](https://palantir.github.io/conjure/#/docs/spec/conjure_definitions), with some small modifications. Any "service" may be treated as a "Firebase Callable" service by setting the field `firebase-callable: true`. For these services:
+* Do not define `base-path` or `default-auth` 
+* Each endpoint in the service corresponds to a Cloud Function that you will create. For each endpoint in the service: 
+    * Do not define an `http` field
+    * Simply provide an endpoint name as well as a single `data` field (for your function's input type) and a `returns` field (for your function's return type)
+    * The type specified in the `data` field must be an object defined in the "types" portion of the YAML file
 
 For example:
 
@@ -104,7 +109,7 @@ async function myFunction() {
 ```
 
 
-##How Does It Work?
+## How Does It Work?
 
 Conjure Typescript generates a folder containing the definitions for the API objects and services. The objects are just TypeScript interfaces that can be imported as normal. Services are classes, and require an ApiBridge to work. The ApiBridge actually calls the endpoint that the conjure API is describing. Conjure Typescript provides the interface IHttpApiBridge which we implement.
 
@@ -140,7 +145,8 @@ export interface IHttpEndpointOptions {
 
 export interface IHttpApiBridge {
     callEndpoint<T>(parameters: IHttpEndpointOptions): Promise<T>;
-}```
+}
+```
 
 
 ```typescript
@@ -154,4 +160,5 @@ export class FirebaseApiBridge implements IHttpApiBridge {
         );
         return result.data;
     }
-}```
+}
+```

@@ -54,8 +54,19 @@ services:
 Generate a Typescript client for your API by running:
 
 ```
-npx conjure-firebase <path/to/api.yml> <path/for/generated/client.ts>
+npx conjure-firebase <path/to/api.yml> <path/for/generated/client.ts> <path/to/server/function/project>
 ```
+
+Alternatively you can use a dotfile `.conjure-firebase-config` to specify your arguments. This file must follow a json format and specify the fields  `conjureDefinitions`, `clientFile`, and `functionsPath`:
+
+```
+{
+  "conjureDefinitions": "example-api.yml",
+  "clientFile": "src/example-client.ts",
+  "functionsPath": "functions/src"
+}
+```
+
 
 You may also call `conjure-firebase` directly from a script in your `package.json`.
 

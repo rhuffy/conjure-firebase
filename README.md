@@ -1,8 +1,8 @@
 # 🔥 🔥 🔥 Conjure Firebase 🔥 🔥 🔥
+*Strongly type your Firebase Cloud Function API using [Conjure](https://github.com/palantir/conjure)*
 
 NOTE: This package is currently in active development and not ready for production use.
 
-Strongly type your Firebase Cloud Function API using [Conjure](https://github.com/palantir/conjure)
 
 ## Installation
 
@@ -28,10 +28,13 @@ types:
   definitions:
     default-package: com.conjurefirebase.firebase.api
     objects:
+      Name:
+        fields:
+          first: string
+          last: string
       Greeting:
         fields:
-          to: string
-          from: string
+          sender: Name
           text: string
 services:
   FirebaseFunctionsService:
@@ -40,19 +43,7 @@ services:
     firebase-callable: true
     endpoints:
       sayHello:
-        args:
-          name: string
-        returns: Greeting
-  NormalService:
-    name: Firebase Functions
-    package: com.conjurefirebase.firebase.api
-    base-path: /normal-service
-    default-auth: none
-    endpoints:
-      sayHello:
-        http: POST /
-        args:
-          name: string
+        data: Name
         returns: Greeting
 ```
 
@@ -79,34 +70,28 @@ A generated client file for the above example looks like this:
 
 ```typescript
 import { DefaultHttpApiBridge, FirebaseApiBridge } from "conjure-firebase";
-import { FirebaseFunctionsService, NormalService } from "./conjure-api";
+import { FirebaseFunctionsService as __FirebaseFunctionsService } from "../conjure-api";
 
 const fab = new FirebaseApiBridge();
-const hab = new DefaultHttpApiBridge({
-  baseUrl: "https://us-central1-my-cool-project.cloudfunctions.net",
-  userAgent: {
-    productName: "conjure-firebase",
-    productVersion: "1.0.0",
-  },
-});
 
-const FirebaseFunctionsService_instance = new FirebaseFunctionsService(fab);
-export { FirebaseFunctionsService_instance as FirebaseFunctionsService };
-const NormalService_instance = new NormalService(hab);
-export { NormalService_instance as NormalService };
+const FirebaseFunctionsService = new __FirebaseFunctionsService(fab);
+export { FirebaseFunctionsService };
 ```
 
 You can consume the client like this:
 
 ```typescript
 import { FirebaseFunctionsService } from "./client";
-import { IGreeting } from "./conjure-api";
+import { IName, IGreeting } from "./conjure-api";
 
 async function myFunction() {
-  const response: IGreeting = await FirebaseFunctionsService.sayHello("Alex");
+  const data: IName = {first: "John", last: "Doe"};
+  const response: IGreeting = await FirebaseFunctionsService.sayHello(data);
   console.log(response.text);
 }
 ```
+
+Note that using Conjure-Firebase allows you to view all the endpoints present in a service you've defined. Typing "FirebaseFunctionsService." in an IDE offers autocomplete prompts for available endpoints.  
 
 
 ## How Does It Work?

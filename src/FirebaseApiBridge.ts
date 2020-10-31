@@ -1,5 +1,5 @@
 import { IHttpApiBridge, IHttpEndpointOptions } from "conjure-client";
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/functions";
 
 const functions = firebase.functions();
